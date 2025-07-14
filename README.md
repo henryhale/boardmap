@@ -156,4 +156,4 @@ static calculateCustomHeatmap(gameEngine) {
 
 This project is licensed under the MIT License - see the [LICENSE.txt](./LICENSE.txt) file for details.
 
-Made with ❤️ by [Henry Hale](https://github.com/henryhale)
+Made with ❤️ by [Henry Hale](https://github.com/henryhale) with support from [Anthropic's Claude Code](https://anthropic.com/claude).
