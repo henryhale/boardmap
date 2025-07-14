@@ -45,7 +45,7 @@ The traditional board game experience relies heavily on players' ability to visu
 
 ## Live Demo
 
-Try it yourself: :rocket: [Launch]()
+Try it yourself: [:rocket: Launch](https://henryhale.github.io/boardmap/)
 
 ## Quick Start
 
@@ -63,7 +63,7 @@ pnpm install
 pnpm start
 ```
 
-Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
+Open `http://localhost:5173` to view it in your browser.
 
 ## Usage
 
@@ -103,7 +103,6 @@ Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 1. Create a new class extending [GameEngine](./lib/core/engine.ts)
 2. Implement all abstract methods
 3. Add game-specific logic
-4. Register in the [games](./src/games.ts) registry
 
 Example:
 
