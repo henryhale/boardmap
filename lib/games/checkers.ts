@@ -1,21 +1,18 @@
-import { GameEngine, BoardEntry } from "../core"
+import { GameEngine, type BoardEntry } from "../core"
 
 const BOARD_SIZE = 8
 
-export enum PLAYER {
-	BLACK = "BLACK",
-	WHITE = "WHITE",
+export const PLAYER = {
+	BLACK: "BLACK",
+	WHITE: "WHITE",
 }
 
 export interface Piece extends BoardEntry {
-	player: PLAYER
 	king: boolean
 }
 
 // checkers
 export class Engine extends GameEngine<Piece> {
-	currentPlayer: PLAYER
-
 	constructor() {
 		super(BOARD_SIZE)
 		this.currentPlayer = PLAYER.BLACK
@@ -67,7 +64,6 @@ export class Engine extends GameEngine<Piece> {
 				const stepCol = Math.sign(toCol - fromCol)
 
 				// Check path is clear (except for potential jump)
-				let jumpedPiece
 				let jumpedCount = 0
 
 				for (let step = 1; step < Math.abs(rowDiff); step++) {
@@ -77,7 +73,6 @@ export class Engine extends GameEngine<Piece> {
 
 					if (pieceAtPos) {
 						if (pieceAtPos.player === piece.player) return false
-						jumpedPiece = pieceAtPos
 						jumpedCount++
 						if (jumpedCount > 1) return false // Can only jump one piece
 					}

@@ -1,10 +1,10 @@
 import type { IGameEngine, BoardEntry } from "./engine"
 
-export enum HEATMAP {
-	NONE = "",
-	INFLUENCE = "influence",
-	MOVEMENT = "movement",
-	THREAT = "threat",
+export const HEATMAP = {
+	NONE: "",
+	INFLUENCE: "influence",
+	MOVEMENT: "movement",
+	THREAT: "threat",
 }
 
 function createBlankGrid(boardSize: number): number[][] {

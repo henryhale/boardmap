@@ -6,22 +6,20 @@ import {
 	RotateCcwIcon,
 	TargetIcon,
 	CrownIcon,
+	GitForkIcon,
 } from "lucide-vue-next"
 import BoardEntry from "./components/BoardEntry.vue"
 import { HEATMAP, HeatmapCalculator } from "../lib/core"
-import games from "./games"
+import { Engine, PLAYER } from "../lib/games/checkers"
 
-const boardGame = ref("checkers")
+const gameEngine = new Engine()
 
-const game = computed(() => games[boardGame.value])
-const gameEngine = computed(() => new game.value.Engine())
-
-const blankGrid = Array(gameEngine.value.boardSize)
+const blankGrid: number[][] = Array(gameEngine.boardSize)
 	.fill(null)
-	.map(() => Array(gameEngine.value.boardSize).fill(0))
+	.map(() => Array(gameEngine.boardSize).fill(0))
 
 const selectedSquare = ref<[number, number] | null>(null)
-const heatmapType = ref<HEATMAP>(HEATMAP.INFLUENCE)
+const heatmapType = ref<string>(HEATMAP.INFLUENCE)
 const showHeatmap = ref<boolean>(true)
 
 const heatmap = computed<number[][]>(() => {
@@ -30,11 +28,11 @@ const heatmap = computed<number[][]>(() => {
 	}
 	switch (heatmapType.value) {
 		case HEATMAP.INFLUENCE:
-			return HeatmapCalculator.calculateInfluenceHeatmap(gameEngine.value)
+			return HeatmapCalculator.calculateInfluenceHeatmap(gameEngine)
 		case HEATMAP.MOVEMENT:
-			return HeatmapCalculator.calculateMovementHeatmap(gameEngine.value)
+			return HeatmapCalculator.calculateMovementHeatmap(gameEngine)
 		case HEATMAP.THREAT:
-			return HeatmapCalculator.calculateThreatHeatmap(gameEngine.value)
+			return HeatmapCalculator.calculateThreatHeatmap(gameEngine)
 		default:
 			return blankGrid
 	}
@@ -45,30 +43,32 @@ const maxHeatValue = computed<number>(() => Math.max(...heatmap.value.flat()))
 const getHeatmapColor = (value: number): string => {
 	if (value === 0) return "transparent"
 	const intensity = value / maxHeatValue.value
-	const colors = {
-		influence: `rgba(59, 130, 246, ${intensity * 0.7})`,
-		movement: `rgba(34, 197, 94, ${intensity * 0.7})`,
-		threat: `rgba(239, 68, 68, ${intensity * 0.7})`,
+	switch (heatmapType.value) {
+		case HEATMAP.INFLUENCE:
+			return `rgba(59, 130, 246, ${intensity * 0.7})`
+		case HEATMAP.MOVEMENT:
+			return `rgba(34, 197, 94, ${intensity * 0.7})`
+		case HEATMAP.THREAT:
+			return `rgba(239, 68, 68, ${intensity * 0.7})`
+		default:
+			return "transparent"
 	}
-	return colors[heatmapType.value] || "transparent"
 }
 
 const handleSquareClick = (row: number, col: number) => {
 	if (selectedSquare.value) {
 		const [fromRow, fromCol] = selectedSquare.value
-		if (gameEngine.value.makeMove(fromRow, fromCol, row, col)) {
+		if (gameEngine.makeMove(fromRow, fromCol, row, col)) {
 			selectedSquare.value = null
 		} else if (
-			gameEngine.value.board[row][col]?.player ===
-			gameEngine.value.getCurrentPlayer()
+			gameEngine.board[row][col]?.player === gameEngine.getCurrentPlayer()
 		) {
 			selectedSquare.value = [row, col]
 		} else {
 			selectedSquare.value = null
 		}
 	} else if (
-		gameEngine.value.board[row][col]?.player ===
-		gameEngine.value.getCurrentPlayer()
+		gameEngine.board[row][col]?.player === gameEngine.getCurrentPlayer()
 	) {
 		selectedSquare.value = [row, col]
 	}
@@ -77,11 +77,11 @@ const handleSquareClick = (row: number, col: number) => {
 const possibleMoves = computed(() => {
 	if (!selectedSquare.value) return []
 	const [row, col] = selectedSquare.value
-	return gameEngine.value.getPossibleMoves(row, col)
+	return gameEngine.getPossibleMoves(row, col)
 })
 
 const resetGame = () => {
-	gameEngine.value.resetGame()
+	gameEngine.resetGame()
 	selectedSquare.value = null
 	heatmapType.value = HEATMAP.NONE
 	showHeatmap.value = false
@@ -91,11 +91,21 @@ const resetGame = () => {
 <template>
 	<div class="min-h-screen bg-gray-100 p-4">
 		<div class="max-w-4xl mx-auto">
-			<div class="text-center mb-8">
-				<h1 class="text-4xl font-bold text-gray-800 mb-2">Boardmap</h1>
-				<p class="text-gray-600">
+			<div class="mb-8">
+				<h1
+					class="text-4xl font-bold text-gray-800 mb-4 flex items-center justify-center space-x-4"
+				>
+					<img src="/logo.svg" class="size-8" />
+					<span>Boardmap</span>
+				</h1>
+				<p class="text-gray-600 text-center">
 					A board game heatmap visualizer providing real-time
 					strategic pattern recognition for enhanced gameplay.
+					<a
+						href="https://github.com/henryhale/boardmap"
+						class="text-gray-700 hover:underline text-sm font-semibold"
+						>Learn more &rarr;</a
+					>
 				</p>
 			</div>
 
@@ -120,19 +130,9 @@ const resetGame = () => {
 									>Board Game</label
 								>
 								<select
-									v-model="boardGame"
 									class="w-full bg-white border border-gray-300 text-gray-800 rounded px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
 								>
-									<option
-										v-for="(i, x) in games"
-										:key="i"
-										:value="x"
-									>
-										{{
-											x[0].toUpperCase() +
-											x.slice(1).toLowerCase()
-										}}
-									</option>
+									<option value="checkers">Checkers</option>
 								</select>
 							</div>
 							<div>
@@ -174,7 +174,7 @@ const resetGame = () => {
 
 							<button
 								@click="resetGame"
-								class="w-full bg-gray-700 hover:bg-gray-800 text-white rounded px-3 py-2 text-sm flex items-center justify-center gap-2 transition-colors"
+								class="w-full bg-gray-800/90 hover:bg-gray-800 text-white rounded px-3 py-2 text-sm flex items-center justify-center gap-2 transition-colors"
 							>
 								<RotateCcwIcon class="size-4" />
 								Reset Game
@@ -196,13 +196,13 @@ const resetGame = () => {
 									{{ gameEngine.getCurrentPlayer() }}
 								</span>
 								<span
-									class="bg-gray-300 size-6 flex items-center justify-center"
+									class="bg-gray-200 size-6 flex items-center justify-center"
 								>
 									<span
 										:class="[
-											'size-4 inline-block rounded-full border-x-2 border-t-0 border-b-4',
+											'size-4 inline-block rounded-full border-x-2 border-t-0 border-b-8',
 											gameEngine.getCurrentPlayer() ===
-											game.PLAYER.WHITE
+											PLAYER.WHITE
 												? 'bg-white border-gray-400'
 												: 'bg-gray-700 border-gray-900',
 										]"
@@ -292,9 +292,9 @@ const resetGame = () => {
 									<div
 										v-if="gameEngine.board[row][col]"
 										:class="[
-											'absolute inset-1 rounded-full border-x-2 border-t-0 border-b-4',
+											'absolute inset-1 rounded-full border-x-2 border-t-0 border-b-8',
 											gameEngine.board[row][col]
-												?.player === game.PLAYER.WHITE
+												?.player === PLAYER.WHITE
 												? 'bg-white border-gray-400'
 												: 'bg-gray-700 border-gray-900',
 											{
@@ -319,6 +319,11 @@ const resetGame = () => {
 						</div>
 					</div>
 				</div>
+			</div>
+
+			<div class="sr-only">
+				Made with ❤️ by
+				<a href="https://github.com/henryhale">Henry Hale</a>
 			</div>
 		</div>
 	</div>

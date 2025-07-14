@@ -47,7 +47,7 @@ export abstract class GameEngine<T extends BoardEntry>
 {
 	boardSize: number
 	board: T[][]
-	currentPlayer: string
+	currentPlayer!: string
 	history: GameHistoryEntry[]
 
 	constructor(boardSize: number) {
@@ -60,43 +60,29 @@ export abstract class GameEngine<T extends BoardEntry>
 		return this.history.length
 	}
 
-	initializeBoard(): T[][] {
-		throw new Error("Method not implemented.")
-	}
+	abstract initializeBoard(): T[][]
 
-	isValidMove(
+	abstract isValidMove(
 		fromRow: number,
 		fromCol: number,
 		toRow: number,
 		toCol: number
-	): boolean {
-		throw new Error("Method not implemented.")
-	}
+	): boolean
 
-	makeMove(
+	abstract makeMove(
 		fromRow: number,
 		fromCol: number,
 		toRow: number,
 		toCol: number
-	): boolean {
-		throw new Error("Method not implemented.")
-	}
+	): boolean
 
-	calculateInfluence(row: number, col: number): number {
-		throw new Error("Method not implemented.")
-	}
+	abstract calculateInfluence(row: number, col: number): number
 
-	getPossibleMoves(row: number, col: number): number[][] {
-		throw new Error("Method not implemented.")
-	}
+	abstract getPossibleMoves(row: number, col: number): number[][]
 
-	getCurrentPlayer(): string {
-		throw new Error("Method not implemented.")
-	}
+	abstract getCurrentPlayer(): string
 
-	resetGame(): void {
-		throw new Error("Method not implemented.")
-	}
+	abstract resetGame(): void
 
 	updateHistory(
 		fromRow: number,
