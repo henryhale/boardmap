@@ -16,9 +16,12 @@ Board games, like Chess, are fun with friends. After playing Chess for a while, 
 
 The traditional board game experience relies heavily on players' ability to visualize complex spatial relationships and strategic patterns. Many players, particularly those with spatial reasoning challenges or newcomers to strategic games, struggle to comprehend the full scope of piece influence, movement possibilities, and threat assessments across the board state. This creates a significant barrier to entry and limits strategic development for a substantial portion of the gaming community.
 
-Boardmap's greatest strength lies in its ability to make complex strategic concepts immediately accessible while maintaining the intellectual depth of traditional games.
+> [!NOTE]
+> Boardmap's greatest strength lies in its ability to make complex strategic concepts immediately accessible while maintaining the intellectual depth of traditional games.
 
-However, careful consideration must be given to balancing assistance with skill development. The tool serves as a learning aid rather than a crutch, encouraging users to gradually develop independent strategic thinking.
+> [!CAUTION]
+> Careful consideration must be given to balancing assistance with skill development.
+> The tool serves as a learning aid rather than a crutch, encouraging users to gradually develop independent strategic thinking.
 
 ## Features
 
