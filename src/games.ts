@@ -1,7 +1,7 @@
-import * as CHECKERS from "../lib/games/checkers";
+import * as CHECKERS from "../lib/games/checkers"
 
 const games: Record<string, unknown> = {
-    checkers: CHECKERS,
+	checkers: CHECKERS,
 }
 
-export default games;
+export default games

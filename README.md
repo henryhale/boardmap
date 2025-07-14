@@ -38,7 +38,7 @@ However, careful consideration must be given to balancing assistance with skill 
 ### Game Support
 
 - [x] **Checkers**: Full implementation with proper king movement
-- [x] **Custom Games**: Extensible base classes for new game types
+- [x] **Custom Games**: Extensible base classes for new game types: [Learn how](#adding-new-games)
 
 ## Live Demo
 
@@ -106,19 +106,19 @@ Example:
 
 ```javascript
 class ChessEngine extends GameEngine {
-  constructor() {
-    super(8); // 8x8 board
-  }
+	constructor() {
+		super(8) // 8x8 board
+	}
 
-  initializeBoard() {
-    // Chess piece setup
-  }
+	initializeBoard() {
+		// Chess piece setup
+	}
 
-  isValidMove(fromRow, fromCol, toRow, toCol) {
-    // Chess move validation
-  }
+	isValidMove(fromRow, fromCol, toRow, toCol) {
+		// Chess move validation
+	}
 
-  // ... other methods
+	// ... other methods
 }
 ```
 
@@ -137,7 +137,7 @@ static calculateCustomHeatmap(gameEngine) {
 
 ## Acknowledgements
 
-- [PixSim](https://henryhale.github.io/pixsim) - project logo made manually using it's image creator
+- [PixSim](https://henryhale.github.io/pixsim/) - project logo made manually using it's image creator
 - [Vuejs](https://v3.vuejs.org) - seamless UI render and reactivity
 - [TailwindCSS](https://v3.tailwindcss.com) - CSS made easy
 - [Lucide Icons](https://lucide.dev) - free beautiful icons
