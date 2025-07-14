@@ -6,7 +6,6 @@ import {
 	RotateCcwIcon,
 	TargetIcon,
 	CrownIcon,
-	GitForkIcon,
 } from "lucide-vue-next"
 import BoardEntry from "./components/BoardEntry.vue"
 import { HEATMAP, HeatmapCalculator } from "../lib/core"
